@@ -23,6 +23,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <test_depend>roslaunch</test_depend>
+
   <exec_depend>joint_state_publisher</exec_depend>
   <exec_depend>kuka_kr6_support</exec_depend>
   <exec_depend>moveit_fake_controller_manager</exec_depend>
