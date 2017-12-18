@@ -41,6 +41,8 @@
 
 #include <stdexcept>
 
+#include <sstream>
+
 
 namespace kuka_rsi_hw_interface
 {
