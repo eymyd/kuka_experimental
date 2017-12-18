@@ -93,7 +93,7 @@ KukaHardwareInterface::~KukaHardwareInterface()
 
 bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration period)
 {
-  in_buffer_.resize(1024);
+  //in_buffer_.resize(1024);
 
   if (server_->recv(in_buffer_) == 0)
   {

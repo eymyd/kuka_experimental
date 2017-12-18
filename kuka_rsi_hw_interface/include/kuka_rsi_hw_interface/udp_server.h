@@ -148,11 +148,13 @@ public:
     }
     else
     {
-      memset(buffer_, 0, BUFSIZE);
+      //memset(buffer_, 0, BUFSIZE);
       bytes = recvfrom(sockfd_, buffer_, BUFSIZE, 0, (struct sockaddr *) &clientaddr_, &clientlen_);
       if (bytes < 0)
       {
         std::cout << "ERROR in recvfrom" << std::endl;
+      } else {
+        buffer[bytes] = '\0';
       }
     }
 
