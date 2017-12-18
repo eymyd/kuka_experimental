@@ -117,7 +117,7 @@ bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration perio
 
 inline std::string writexml(std::vector<double> joint_position_correction, unsigned long long ipoc)
 {
-  ostringstream xml_rsi;
+  std::ostringstream xml_rsi;
   xml_rsi << "<Sen Type=\"ImFree\">\n";
   xml_rsi<<"<AK ";
   for(int i=0;i<6;i++)
