@@ -113,6 +113,23 @@ bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration perio
   return true;
 }
 
+inline std::string writexml(std::vector<double> joint_position_correction, unsigned long long ipoc)
+{
+  ostringstream xml_rsi;
+  xml_rsi << "<Sen Type=\"ImFree\">\n";
+  xml_rsi<<"<AK ";
+  for(int i=0;i<6;i++)
+  {
+    xml_rsi<<"A"<<(i+1)<<"=\""<<std::to_string(joint_position_correction[i])<<"\" ";
+  }
+  xml_rsi<<"/>\n";
+  xml_rsi<<"<IPOC>";
+  xml_rsi<<std::to_string(ipoc);
+  xml_rsi<<"</IPOC>\n";
+  xml_rsi<<"</Sen>";
+  return xml_rsi.str();
+}
+
 bool KukaHardwareInterface::write(const ros::Time time, const ros::Duration period)
 {
   out_buffer_.resize(1024);
@@ -122,7 +139,8 @@ bool KukaHardwareInterface::write(const ros::Time time, const ros::Duration peri
     rsi_joint_position_corrections_[i] = (RAD2DEG * joint_position_command_[i]) - rsi_initial_joint_positions_[i];
   }
 
-  out_buffer_ = RSICommand(rsi_joint_position_corrections_, ipoc_).xml_doc;
+//  out_buffer_ = RSICommand(rsi_joint_position_corrections_, ipoc_).xml_doc;
+out_buffer_=writexml(rsi_joint_position_corrections_,ipoc_);
   server_->send(out_buffer_);
 
   return true;
