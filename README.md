@@ -5,6 +5,12 @@
 Experimental packages for Kuka manipulators within [ROS-Industrial][].
 See the [ROS wiki][] page for more information.
 
+## Installation
+Install ROS Control
+`sudo apt-get install ros-kinetic-ros-control ros-kinetic-ros-controllers`
+Build
+`catkin_make`
+
 
 ## Contents
 
