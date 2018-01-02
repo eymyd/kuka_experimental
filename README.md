@@ -14,6 +14,11 @@ Build:
 
 `catkin_make`
 
+## Run Robot
+
+1. run`roscore` in one terminal
+
+2. run `roslaunch kuka_kr6r900sixx_moveit_config moveit_planning_execution_rsi.launch `
 
 ## Contents
 
