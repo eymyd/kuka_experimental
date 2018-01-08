@@ -41,8 +41,6 @@
 
 #include <stdexcept>
 
-#include <sstream>
-
 
 namespace kuka_rsi_hw_interface
 {
@@ -83,6 +81,10 @@ KukaHardwareInterface::KukaHardwareInterface() :
   registerInterface(&joint_state_interface_);
   registerInterface(&position_joint_interface_);
 
+  std::string xml;
+  xml.reserve(1024);
+  xml_rsi = new std::ostringstream(xml);
+
   ROS_INFO_STREAM_NAMED("hardware_interface", "Loaded kuka_rsi_hardware_interface");
 }
 
@@ -104,6 +106,9 @@ bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration perio
     rt_rsi_pub_->msg_.data = in_buffer_;
     rt_rsi_pub_->unlockAndPublish();
   }
+  //
+  
+  //
 
   rsi_state_ = RSIState(in_buffer_);
   for (std::size_t i = 0; i < n_dof_; ++i)
@@ -115,26 +120,28 @@ bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration perio
   return true;
 }
 
-inline std::string writexml(std::vector<double> joint_position_correction, unsigned long long ipoc)
+std::string KukaHardwareInterface::writexml(std::vector<double> joint_position_correction, unsigned long long ipoc)
 {
-  std::ostringstream xml_rsi;
-  xml_rsi << "<Sen Type=\"ImFree\">\n";
-  xml_rsi<<"<AK ";
+  xml_rsi->clear();
+  xml_rsi->seekp(0);
+  (*xml_rsi) << "<Sen Type=\"ImFree\">\n";
+  (*xml_rsi)<<"<AK ";
   for(int i=0;i<6;i++)
   {
-    xml_rsi<<"A"<<(i+1)<<"=\""<<std::to_string(joint_position_correction[i])<<"\" ";
+    (*xml_rsi)<<"A"<<(i+1)<<"=\""<<std::to_string(joint_position_correction[i])<<"\" ";
   }
-  xml_rsi<<"/>\n";
-  xml_rsi<<"<IPOC>";
-  xml_rsi<<std::to_string(ipoc);
-  xml_rsi<<"</IPOC>\n";
-  xml_rsi<<"</Sen>";
-  return xml_rsi.str();
+  (*xml_rsi)<<"/>\n";
+  (*xml_rsi)<<"<IPOC>";
+  (*xml_rsi)<<std::to_string(ipoc);
+  (*xml_rsi)<<"</IPOC>\n";
+  (*xml_rsi)<<"</Sen>";
+  (*xml_rsi)<<std::ends;
+  return xml_rsi->str();
 }
 
 bool KukaHardwareInterface::write(const ros::Time time, const ros::Duration period)
 {
-  out_buffer_.resize(1024);
+  //out_buffer_.resize(1024);
 
   for (std::size_t i = 0; i < n_dof_; ++i)
   {
@@ -165,7 +172,9 @@ void KukaHardwareInterface::start()
     rsi_initial_joint_positions_[i] = rsi_state_.initial_positions[i];
   }
   ipoc_ = rsi_state_.ipoc;
-  out_buffer_ = RSICommand(rsi_joint_position_corrections_, ipoc_).xml_doc;
+  out_buffer_.resize(1024);
+  writexml(rsi_joint_position_corrections_,ipoc_);
+  //out_buffer_ = RSICommand(rsi_joint_position_corrections_, ipoc_).xml_doc;
   server_->send(out_buffer_);
   // Set receive timeout to 1 second
   server_->set_timeout(1000);

@@ -43,6 +43,7 @@
 // STL
 #include <vector>
 #include <string>
+#include <sstream>
 
 // ROS
 #include <ros/ros.h>
@@ -116,6 +117,10 @@ private:
   // Interfaces
   hardware_interface::JointStateInterface joint_state_interface_;
   hardware_interface::PositionJointInterface position_joint_interface_;
+
+  //stringstream
+  std::ostringstream* xml_rsi;
+  std::string writexml(std::vector<double> joint_position_correction, unsigned long long ipoc);
 
 public:
 

@@ -82,7 +82,7 @@
   </rosparam>
 
   <!-- main 'driver node': the RSI hardware interface -->
-  <node name="kuka_hardware_interface" pkg="kuka_rsi_hw_interface" type="kuka_hardware_interface_node" respawn="false">
+  <node name="kuka_hardware_interface" pkg="kuka_rsi_hw_interface" type="kuka_hardware_interface_node" respawn="false" launch-prefix="valgrind --tool=massif prog">
     <!-- remap topics to conform to ROS-I specifications -->
     <remap from="$(arg pos_ctrlr_name)/follow_joint_trajectory" to="/joint_trajectory_action" />
     <remap from="$(arg pos_ctrlr_name)/state" to="/feedback_states" />
